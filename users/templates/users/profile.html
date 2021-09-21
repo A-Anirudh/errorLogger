@@ -1,0 +1,105 @@
+{% extends 'log/base.html' %}
+{% block content %}
+{% load socialaccount %}
+{% get_social_accounts profile as accounts %}
+{%load crispy_forms_tags %} 
+<title>Error logger - Profile {{ profile.username }}</title>
+
+<div id='profile' class="content-section card  p-4">
+  <div class="media">
+{% if profile.username == user.username %}
+
+  {% if accounts %} 
+  <img class='rounded-circle account-img' src="{{ profile.socialaccount_set.all.0.get_avatar_url }}" />
+  {% else %}
+      <img class="rounded-circle account-img" src="{{ profile.profile.avatar.url }}">
+  {% endif %}
+
+
+  {% else %}
+
+
+
+  {% if accounts %} 
+  
+  <img class='rounded-circle account-img' src="{{ profile.socialaccount_set.all.0.get_avatar_url }}" />
+
+  {% else %}
+  
+      <img class="rounded-circle account-img" src="{{ profile.profile.avatar.url }}">
+  {% endif %}
+
+{% endif %}
+
+    <div class="media-body">
+      <h2 class="account-heading">{{profile.username}}</h2>
+      <p >{{profile.email}}</p>
+      <p>Created on: {{ profile.profile.created }}</p>
+      {% if profile.username == user.username %}
+
+      <p>Last updated on : {{ profile.profile.updated }}</p>
+    {% endif %}
+    </div>
+  </div>
+
+
+
+  <!-- FORM HERE -->
+
+{% if profile.username == user.username %}
+
+
+
+
+  <form method='POST' autocomplete="off" enctype="multipart/form-data" >
+    {% csrf_token %}
+
+    <fieldset class='form-group'>
+        <legend class='border-bottom mb-4'>Update Profile</legend>
+        {{ u_form | crispy }}
+        {{ p_form | crispy }}
+    </fieldset>
+
+    <div class='form-group'>
+        
+        <button class='btn btn-outline-info' type='submit'>Update</button>
+
+    </div>
+
+  </form>
+
+    {% endif %}
+  
+
+<div class="container border-top mt-4 pt-4">
+
+  <legend>Posts</legend>
+  
+  {% for i in all_post_by_user %}
+
+
+  <div id="you-want-lazyload" data-lazyload="&lt;p&gt;Anything you want to lazyload&lt;/p&gt;" class='m-4'>
+    <div class="container main m-4" style="width: 50vw;">
+        <a class='link' href="{% url 'log-detail' i.slug   %}"><h2 >{{ i.title }}</h2></a>
+        <p>{{ i.content }}</p>
+        <p class='small'>{{ i.created }}</p>
+    </div>
+
+  </div>
+
+
+  {% endfor %}
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock content %}
