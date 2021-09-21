@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
-
+import django_heroku
+import dj_database_url
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -68,7 +70,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 
 }
-SITE_ID =1
+SITE_ID = 1
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -81,6 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'errorLogger.urls'
@@ -158,6 +161,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static/css',
 ]
 
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -169,17 +174,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'home'
 
-SESSION_COOKIE_AGE =  60 * 60 * 24 * 30 # One month
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One month
 
-LOGIN_URL  = 'login'
+LOGIN_URL = 'login'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-'https://www.googleapis.com/auth/userinfo.email',
-'https://www.googleapis.com/auth/userinfo.profile'
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
 ]
 
-SOCIALACCOUNT_EMAIL_VERIFICATION=True
-SOCIALACCOUNT_EMAIL_REQUIRED=True
+SOCIALACCOUNT_EMAIL_VERIFICATION = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 
 
@@ -190,3 +195,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'anir170104@gmail.com'
 EMAIL_HOST_PASSWORD = 'glflgtynumfssiwj'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+
+django_heroku.settings(locals())
